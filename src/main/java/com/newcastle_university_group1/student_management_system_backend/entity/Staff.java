@@ -1,0 +1,118 @@
+package com.newcastle_university_group1.student_management_system_backend.entity;
+
+import java.io.Serializable;
+
+/**
+ * @author Ronghui Zhong
+ * @description: Staff Entity Class
+ * @date 2024/3/29 22:10
+ * @ProjectName Dyson Student Management System
+ **/
+public class Staff implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Staff ID
+     */
+    private String staffId;
+
+    /**
+     * Staff surname
+     */
+    private String surname;
+
+    /**
+     * Staff firstname
+     */
+    private String firstName;
+
+    /**
+     * Staff Type ( 0: Admin, 1: teacher)
+     */
+    private Integer staffType;
+
+    /**
+     * Programme ID
+     */
+    private String programmeId;
+
+    /**
+     *  Password
+     */
+    private String password;
+
+    /**
+     * email
+     */
+    private String email;
+
+    public String getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
+
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public Integer getStaffType() {
+        return staffType;
+    }
+
+    public void setStaffType(Integer staffType) {
+        this.staffType = staffType;
+    }
+    public String getProgrammeId() {
+        return programmeId;
+    }
+
+    public void setProgrammeId(String programmeId) {
+        this.programmeId = programmeId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "staffId='" + staffId + '\'' +
+                ", surname='" + surname + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", staffType=" + staffType +
+                ", programmeId='" + programmeId + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+}
