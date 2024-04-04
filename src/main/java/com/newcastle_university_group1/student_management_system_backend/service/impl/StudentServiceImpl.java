@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Ronghui Zhong
- * @description: Student Service Implementation class
+ * @description: IStudent Service Implementation class
  *  This class encapsulates the logic related to student operations, including creating,
  *  updating, deleting, and retrieving student user records.
  * @date 2024/3/29 22:30

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Ronghui Zhong
- * @description: StaffService Implementation class
+ * @description: IStaffService Implementation class
  *  This class encapsulates the logic related to student operations, including creating,
  *  updating, deleting, and retrieving staff user records.
  * @date 2024/3/29 21:51

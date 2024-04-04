@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.time.Year;
 
 /**
- * @author Ansel Zhong
+ * @author Ronghui Zhong
  * @description:
  * This class deals with logic and operation of User (Student / Staff)
  * includes :

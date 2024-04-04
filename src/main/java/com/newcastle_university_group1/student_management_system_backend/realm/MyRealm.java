@@ -6,7 +6,6 @@ import com.newcastle_university_group1.student_management_system_backend.entity.
 import com.newcastle_university_group1.student_management_system_backend.entity.Student;
 import com.newcastle_university_group1.student_management_system_backend.mapper.StaffMapper;
 import com.newcastle_university_group1.student_management_system_backend.mapper.StudentMapper;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -17,7 +16,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 
 /**
  * @author Ronghui Zhong
