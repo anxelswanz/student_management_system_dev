@@ -28,7 +28,8 @@ public enum RespBeanEnum {
     /**
      * No authentication
      */
-    NOT_AUTHENTICATED(401, "NOT AUTHENTICATED")
+    NOT_AUTHENTICATED(401, "NOT AUTHENTICATED"),
+
     ;
     /**
      * State Code
