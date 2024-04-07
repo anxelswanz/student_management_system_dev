@@ -47,6 +47,11 @@ public class Staff implements Serializable {
      */
     private String email;
 
+    /**
+     * Staff Background
+     */
+    private String background;
+
     public String getStaffId() {
         return staffId;
     }
@@ -103,6 +108,14 @@ public class Staff implements Serializable {
         this.email = email;
     }
 
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
+    }
+
     @Override
     public String toString() {
         return "Staff{" +
@@ -113,6 +126,7 @@ public class Staff implements Serializable {
                 ", programmeId='" + programmeId + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", background='" + background + '\'' +
                 '}';
     }
 }

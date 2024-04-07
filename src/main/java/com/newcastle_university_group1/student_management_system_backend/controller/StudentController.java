@@ -33,6 +33,9 @@ public class StudentController {
     private ModuleMapper moduleMapper;
 
     /**
+     * Authorization: Student
+     * @Author: Ronghui Zhong
+     *
      * Retrieves a list of modules associated with a given student ID. This method first verifies the validity of the
      * provided student ID, then looks up the corresponding student record to determine the programme ID associated
      * with the student. Using the programme ID, it fetches and returns a list of modules that are part of the
