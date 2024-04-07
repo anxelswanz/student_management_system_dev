@@ -32,6 +32,18 @@ public class StudentController {
     @Autowired
     private ModuleMapper moduleMapper;
 
+    /**
+     * Retrieves a list of modules associated with a given student ID. This method first verifies the validity of the
+     * provided student ID, then looks up the corresponding student record to determine the programme ID associated
+     * with the student. Using the programme ID, it fetches and returns a list of modules that are part of the
+     * student's programme.
+     *
+     * @param studentId The unique identifier of the student for whom modules are being requested. This ID is used
+     *                  to locate the student's record and their associated programme.
+     * @return {@code RespBean} object containing the operation's result. If successful, the {@code RespBean} will
+     *         contain a list of {@code Module} objects associated with the student's programme. If the student ID is
+     *         invalid, empty, or if no student matches the provided ID, an error {@code RespBean} is returned.
+     */
     @GetMapping("/getModulesByStudentId")
     public RespBean getModulesByStudentId(String studentId){
         /**
