@@ -2,6 +2,9 @@ package com.newcastle_university_group1.student_management_system_backend.servic
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.newcastle_university_group1.student_management_system_backend.entity.Coursework;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @author Ronghui Zhong
@@ -10,5 +13,5 @@ import com.newcastle_university_group1.student_management_system_backend.entity.
  * @ProjectName Dyson Student Management System
  **/
 public interface ICourseworkService extends IService<Coursework> {
-
+    String getUploadCoursework(MultipartFile file) throws IOException;
 }

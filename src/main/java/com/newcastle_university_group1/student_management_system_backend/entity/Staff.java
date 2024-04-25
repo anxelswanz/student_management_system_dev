@@ -1,6 +1,9 @@
 package com.newcastle_university_group1.student_management_system_backend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Ronghui Zhong
@@ -51,6 +54,20 @@ public class Staff implements Serializable {
      * Staff Background
      */
     private String background;
+
+    /**
+     * Module Ids
+     */
+    @TableField(exist = false)
+    private List<String> moduleIds;
+
+    public List<String> getModuleIds() {
+        return moduleIds;
+    }
+
+    public void setModuleIds(List<String> moduleIds) {
+        this.moduleIds = moduleIds;
+    }
 
     public String getStaffId() {
         return staffId;
@@ -127,6 +144,7 @@ public class Staff implements Serializable {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", background='" + background + '\'' +
+                ", moduleIds=" + moduleIds +
                 '}';
     }
 }

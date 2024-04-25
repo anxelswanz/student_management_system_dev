@@ -1,0 +1,11 @@
+package com.newcastle_university_group1.student_management_system_backend.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.newcastle_university_group1.student_management_system_backend.entity.StudentTutor;
+import com.newcastle_university_group1.student_management_system_backend.mapper.StudentTutorMapper;
+import com.newcastle_university_group1.student_management_system_backend.service.IStudentTutorService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class StudentTutorServiceImpl extends ServiceImpl<StudentTutorMapper, StudentTutor> implements IStudentTutorService {
+}
