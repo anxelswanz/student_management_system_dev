@@ -6,7 +6,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- @author Ansel Zhong
+ @author Ronghui Zhong
  @Date 2023/5/28
  @Description CORS Configuration
  */

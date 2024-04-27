@@ -9,6 +9,8 @@ import com.newcastle_university_group1.student_management_system_backend.service
 import com.newcastle_university_group1.student_management_system_backend.service.IStudentService;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBean;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBeanEnum;
+import com.newcastle_university_group1.student_management_system_backend.vo.UserVo;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -50,25 +52,23 @@ public class UserController {
      * Handles user login requests. Authenticates the user based on provided credentials and
      * sets the user session if authentication is successful.
      *
-     * @param name the username of the user attempting to log in
-     * @param password the password of the user attempting to log in
-     * @param rememberMe a boolean flag indicating if the user opted for the "remember me" feature
-     *                   to maintain their session across different sessions. Defaults to false if
-     *                   not explicitly provided.
-     * @param session the HTTP session associated with this request. Used to manage session attributes
-     *                post successful authentication.
+     * @param userVo
+     *  - the username of the user attempting to log in
+     *  - the password of the user attempting to log in
+     *  - a boolean flag indicating if the user opted for the "remember me" feature
+     *    to maintain their session across different sessions. Defaults to false if
+     *    not explicitly provided.
      * @return RespBean an object representing the outcome of the login attempt. On successful
      *         authentication, it returns a success response populated with the user's details
      *         (either Staff or Student). In case of failure, it returns an error response indicating
      *         the login was unsuccessful.
      */
     @PostMapping("/login")
-    public RespBean login(@RequestParam String name,
-                       @RequestParam String password,
-                       @RequestParam(defaultValue = "false")
-                       boolean rememberMe,
-                       HttpSession session){
+    public RespBean login( @RequestBody UserVo userVo){
         Subject subject = SecurityUtils.getSubject();
+        String name = userVo.getName();
+        String password = userVo.getPassword();
+        boolean rememberMe = userVo.isRememeberMe();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(name, password,rememberMe);
         Object principal = SecurityUtils.getSubject().getPrincipal();
         try {
@@ -120,7 +120,7 @@ public class UserController {
      * enhance the security of the generated password.
      */
     @PostMapping("/registerStudent")
-    public RespBean registerStu(Student student){
+    public RespBean registerStu(@RequestBody Student student){
 
         /**
          *  1. Create Student ID
