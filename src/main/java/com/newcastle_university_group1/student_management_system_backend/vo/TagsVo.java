@@ -1,0 +1,36 @@
+package com.newcastle_university_group1.student_management_system_backend.vo;
+
+/**
+ * @author Ansel Zhong
+ * @description:
+ * @date 2024/4/29 19:03
+ * @ProjectName student_management_system_backend
+ **/
+public class TagsVo {
+    private String id;
+    private String name;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "TagsVo{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}

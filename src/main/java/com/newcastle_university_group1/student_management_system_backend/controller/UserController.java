@@ -2,13 +2,16 @@ package com.newcastle_university_group1.student_management_system_backend.contro
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.newcastle_university_group1.student_management_system_backend.entity.Staff;
+import com.newcastle_university_group1.student_management_system_backend.entity.StaffProgrammeLink;
 import com.newcastle_university_group1.student_management_system_backend.entity.Student;
 import com.newcastle_university_group1.student_management_system_backend.mapper.StaffMapper;
 import com.newcastle_university_group1.student_management_system_backend.mapper.StudentMapper;
+import com.newcastle_university_group1.student_management_system_backend.service.IStaffProgrammeLinkService;
 import com.newcastle_university_group1.student_management_system_backend.service.IStaffService;
 import com.newcastle_university_group1.student_management_system_backend.service.IStudentService;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBean;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBeanEnum;
+import com.newcastle_university_group1.student_management_system_backend.vo.TagsVo;
 import com.newcastle_university_group1.student_management_system_backend.vo.UserVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
@@ -21,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.time.Year;
+import java.util.List;
 
 /**
  * @author Ronghui Zhong
@@ -48,6 +52,8 @@ public class UserController {
     @Autowired
     private IStaffService staffService;
 
+    @Autowired
+    private IStaffProgrammeLinkService staffProgrammeLinkService;
     /**
      * Handles user login requests. Authenticates the user based on provided credentials and
      * sets the user session if authentication is successful.
@@ -149,6 +155,23 @@ public class UserController {
          */
         student.setStudentYear(1);
 
+        /**
+         * 4. create programmeId
+         */
+        if (student.getStudentType() == 2) {
+            student.setProgrammeId("U01");
+        } else if (student.getStudentType() == 3){
+            student.setProgrammeId("M01");
+        } else {
+            return RespBean.error(RespBeanEnum.ERROR);
+        }
+        /**
+         * 5. set programme status as 0 ongoing
+         * other:
+         * 1: withdrawn
+         * 2: suspend
+         */
+        student.setProgrammeStatus(0);
         boolean save = studentService.save(student);
         if (save)
             return RespBean.success();
@@ -171,8 +194,7 @@ public class UserController {
      * enhance the security of the generated password.
      */
     @PostMapping("/registerEmp")
-    public RespBean registerEmp(Staff staff){
-        System.out.println(staff);
+    public RespBean registerEmp(@RequestBody Staff staff){
         /**
          *  1. Create Employee ID
          *
@@ -203,6 +225,17 @@ public class UserController {
          */
         staff.setStaffType(1);
 
+        /**
+         *  4. Create Tags
+         */
+        List<TagsVo> tags = staff.getTags();
+        StaffProgrammeLink staffProgrammeLink = new StaffProgrammeLink();
+        staffProgrammeLink.setStaffId(userId);
+        for (TagsVo tag : tags) {
+            String id = tag.getId();
+            staffProgrammeLink.setProgrammeId(id);
+            staffProgrammeLinkService.save(staffProgrammeLink);
+        }
         boolean save = staffService.save(staff);
         if (save)
             return RespBean.success();

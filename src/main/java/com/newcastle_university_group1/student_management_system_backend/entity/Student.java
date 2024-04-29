@@ -52,6 +52,20 @@ public class Student implements Serializable {
      */
     private Integer studentYear;
 
+    /**
+     * Programme Status
+     */
+
+    private Integer programmeStatus;
+
+    public Integer getProgrammeStatus() {
+        return programmeStatus;
+    }
+
+    public void setProgrammeStatus(Integer programmeStatus) {
+        this.programmeStatus = programmeStatus;
+    }
+
     public String getStudentId() {
         return studentId;
     }
@@ -124,6 +138,7 @@ public class Student implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", programmeId='" + programmeId + '\'' +
                 ", studentYear=" + studentYear +
+                ", programmeStatus=" + programmeStatus +
                 '}';
     }
 }
