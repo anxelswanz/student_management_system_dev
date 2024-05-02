@@ -45,6 +45,19 @@ public class Absence implements Serializable {
      */
     private String endTime;
 
+    /**
+     * Staff Id
+     */
+    private String staffId;
+
+    public String getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
+
     public String getAbsenceId() {
         return absenceId;
     }
@@ -98,13 +111,14 @@ public class Absence implements Serializable {
     @Override
     public String toString() {
         return "Absence{" +
-            "absenceId=" + absenceId +
-            ", studentId=" + studentId +
-            ", moduleId=" + moduleId +
-            ", status=" + status +
-            ", reason=" + reason +
-            ", startTime=" + startTime +
-            ", endTime=" + endTime +
-        "}";
+                "absenceId='" + absenceId + '\'' +
+                ", studentId='" + studentId + '\'' +
+                ", moduleId='" + moduleId + '\'' +
+                ", status=" + status +
+                ", reason='" + reason + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", staffId='" + staffId + '\'' +
+                '}';
     }
 }

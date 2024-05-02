@@ -47,6 +47,11 @@ public class ModuleHistory implements Serializable {
      */
     private Integer result;
 
+    /**
+     * Credits
+     */
+    private Integer credits;
+
     public String getStudentId() {
         return studentId;
     }
@@ -97,16 +102,25 @@ public class ModuleHistory implements Serializable {
         this.result = result;
     }
 
+    public Integer getCredits() {
+        return credits;
+    }
+
+    public void setCredits(Integer credits) {
+        this.credits = credits;
+    }
+
     @Override
     public String toString() {
         return "ModuleHistory{" +
-            "studentId=" + studentId +
-            ", moduleId=" + moduleId +
-            ", courseworkMark=" + courseworkMark +
-            ", examMark=" + examMark +
-            ", totalMark=" + totalMark +
-            ", moduleName=" + moduleName +
-            ", result=" + result +
-        "}";
+                "studentId='" + studentId + '\'' +
+                ", moduleId='" + moduleId + '\'' +
+                ", courseworkMark=" + courseworkMark +
+                ", examMark=" + examMark +
+                ", totalMark=" + totalMark +
+                ", moduleName='" + moduleName + '\'' +
+                ", result=" + result +
+                ", credits=" + credits +
+                '}';
     }
 }

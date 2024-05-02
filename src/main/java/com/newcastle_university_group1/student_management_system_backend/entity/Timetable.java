@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 /**
  * @author Ronghui Zhong
- * @since 2024-04-29
- */
+ * @description: Timetable Entity Class
+ * @date 2024/4/29 20:00
+ * @ProjectName Dyson Student Management System
+ **/
 public class Timetable implements Serializable {
 
     private static final long serialVersionUID = 1L;

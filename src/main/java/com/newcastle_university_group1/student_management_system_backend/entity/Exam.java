@@ -18,14 +18,11 @@ public class Exam implements Serializable {
      *  Exam Id
      */
     private String examId;
-    /**
-     * Student Id
-     */
-    private String studentId;
+
     /**
      * Corresponding Module
      */
-    private String examModule;
+    private String moduleId;
     /**
      *  Exam Date
      */
@@ -63,20 +60,14 @@ public class Exam implements Serializable {
         this.examId = examId;
     }
 
-    public String getStudentId() {
-        return studentId;
-    }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
 
     public String getExamModule() {
-        return examModule;
+        return moduleId;
     }
 
     public void setExamModule(String examModule) {
-        this.examModule = examModule;
+        this.moduleId = examModule;
     }
 
     public String getExamDate() {
@@ -139,8 +130,7 @@ public class Exam implements Serializable {
     public String toString() {
         return "Exam{" +
                 "examId='" + examId + '\'' +
-                ", studentId='" + studentId + '\'' +
-                ", examModule='" + examModule + '\'' +
+                ", examModule='" + moduleId + '\'' +
                 ", examDate='" + examDate + '\'' +
                 ", examSite='" + examSite + '\'' +
                 ", examStartTime='" + examStartTime + '\'' +
