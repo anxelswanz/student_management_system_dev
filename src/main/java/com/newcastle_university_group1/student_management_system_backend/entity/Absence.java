@@ -1,5 +1,7 @@
 package com.newcastle_university_group1.student_management_system_backend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 
 /**
@@ -13,11 +15,13 @@ public class Absence implements Serializable {
     /**
      * Absence Id
      */
+
     private String absenceId;
 
     /**
      * Student Id
      */
+    @TableId("student_id")
     private String studentId;
 
     /**

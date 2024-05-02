@@ -13,5 +13,5 @@ import java.io.IOException;
  * @ProjectName Dyson Student Management System
  **/
 public interface ICourseworkService extends IService<Coursework> {
-    String getUploadCoursework(MultipartFile file) throws IOException;
+
 }

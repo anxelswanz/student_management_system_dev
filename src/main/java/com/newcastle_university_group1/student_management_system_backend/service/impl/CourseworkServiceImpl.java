@@ -20,23 +20,5 @@ import java.io.IOException;
  **/
 @Service
 public class CourseworkServiceImpl extends ServiceImpl<CourseworkMapper, Coursework> implements ICourseworkService {
-    public String getUploadCoursework(MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
-            return "Please select a file to upload";
-        }
-        // Setting the file storage path
-        String fileName = file.getOriginalFilename();
-        // Select the address to be stored
-        String filePath = "D:/HuaweiMoveData/Users/67659/Desktop/";
-        try {
-            // Creating file paths
-            File dest = new File(filePath + fileName);
-            // Storage Files
-            file.transferTo(dest);
-            return "File uploaded successfully";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Failed to upload file";
-        }
-    }
+
 }

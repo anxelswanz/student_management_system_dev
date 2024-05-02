@@ -25,25 +25,19 @@ public class ModuleServiceImpl extends ServiceImpl<ModuleMapper, Module> impleme
     @Autowired
     private ModuleMapper moduleMapper;
 
-    @Override
-    public List<Module> getModuleTime(String studentId) {
-        List<Module> modules = moduleMapper.getModuleTime(studentId);
-        for (Module module : modules) {
-            String startTime = module.getDate().substring(0, 2);
-            int start = Integer.parseInt(startTime);
-            // Depending on the type of module determines the value to be added
-            int num = module.getType() != null && module.getType().equals("Mechanical") ? 1 : 2;
-            // 12 months in a year, dealing with situations beyond "12"
-            start = ((start + num) % 12 == 0) ? 12 : (start + num) % 12;
-            String incrementedString = String.format("%02d", start);
-            String remainingString = module.getDate().substring(3);
-            // Splicing new strings
-            String endTime = incrementedString + "-" + remainingString;
 
-        }
-        return modules;
-    }
-
+    /**
+     * Authorization: Student
+     * @author Xuezhu Chen
+     *
+     * This method retrieves the study record for a student with pagination from the database using the provided student ID
+     * and pagination information. It returns an {@code IPage<StudentStudyRecordDTO>} object containing the study record
+     * for the student with pagination.
+     *
+     * @param studentId The unique identifier of the student.
+     * @param page The pagination information including current page and page size.
+     * @return An {@code IPage<StudentStudyRecordDTO>} object containing the study record for the student with pagination.
+     */
     @Override
     public IPage<StudentStudyRecordDTO> getStudyRecordWithPagination(String studentId, Page<StudentStudyRecordDTO> page) {
         return moduleMapper.getStudyRecordWithPagination(studentId,page);

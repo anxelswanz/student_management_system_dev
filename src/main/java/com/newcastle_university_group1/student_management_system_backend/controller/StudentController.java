@@ -11,13 +11,15 @@ import com.newcastle_university_group1.student_management_system_backend.mapper.
 import com.newcastle_university_group1.student_management_system_backend.service.*;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBean;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBeanEnum;
+import org.omg.CORBA.IRObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * @author Ronghui Zhong & Xuezhu Chen
@@ -26,7 +28,7 @@ import java.util.List;
  * @ProjectName student_management_system_backend
  **/
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/api/student")
 public class StudentController {
 
     @Autowired
@@ -61,6 +63,10 @@ public class StudentController {
 
     @Autowired
     private IStudentTutorService iStudentTutorService;
+
+
+    @Autowired
+    private IAbsenceService iAbsenceService;
 
     /**
      * Authorization: Student
@@ -130,7 +136,7 @@ public class StudentController {
     @GetMapping("/programmeName")
     public RespBean programmeName(@RequestParam String studentId) {
         // Verify the studentId from the front-end
-        if (studentId == "" && studentId.isEmpty()) {
+        if (studentId == null && studentId.isEmpty()) {
             return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
         }
         // Query the corresponding student record according to studentId
@@ -173,7 +179,7 @@ public class StudentController {
     @GetMapping("/programmeDes")
     public RespBean programmeDes(@RequestParam String studentId) {
         // Verify the studentId from the front-end
-        if (studentId == "" && studentId.isEmpty()) {
+        if (studentId == null && studentId.isEmpty()) {
             return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
         }
         // Query the corresponding student record according to studentId
@@ -198,6 +204,50 @@ public class StudentController {
         return RespBean.success(programmeDes);
     }
 
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Retrieves the list of module IDs associated with the given student ID.
+     * This method verifies the validity of the provided student ID. If the student ID is null or empty, an error
+     * response is returned indicating the inability to find a student with the provided ID. It then queries the
+     * corresponding student record using the provided student ID. If no student is found with the provided ID, an error
+     * response is returned. Once the student is found, it retrieves the programme ID associated with the student. Using
+     * this programme ID, it queries the database to fetch the list of module IDs associated with the programme. If no
+     * module IDs are found for the programme, an error response is returned.
+     *
+     * @param studentId The unique identifier of the student for whom the list of module IDs is being requested.
+     * @return {@code RespBean} object containing the operation's result. If successful, the {@code RespBean} will
+     *         contain the list of module IDs associated with the student's programme. If the student ID is invalid, empty,
+     *         or if no student matches the provided ID, an error {@code RespBean} is returned.
+     */
+    @GetMapping("/moduleIdList")
+    public RespBean moduleIdList(@RequestParam String studentId) {
+        // Verify the studentId from the front-end
+        if (studentId == null || studentId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+        // Query the corresponding student record according to studentId
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("student_id", studentId);
+
+        Student student = iStudentService.getOne(studentQueryWrapper);
+        if (student == null) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+        // Get the programId for student
+        String programmeId = student.getProgrammeId();
+
+        List<Object> moduleIdList = iModuleService.listObjs(new QueryWrapper<Module>()
+                .select("module_id")
+                .eq("programme_id", programmeId));
+
+        if (moduleIdList == null) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find moduleId list by programmeId");
+        }
+        return RespBean.success(moduleIdList);
+
+    }
 
     /**
      * Authorization: Student
@@ -219,12 +269,40 @@ public class StudentController {
         if (studentId == null || studentId.isEmpty()) {
             return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
         }
-        List<Module> moduleTimeList = iModuleService.getModuleTime(studentId);
-        if (moduleTimeList == null || moduleTimeList.isEmpty()) {
-            return RespBean.error(RespBeanEnum.ERROR, "Cannot find module time by studentId");
+        // Query the corresponding student record according to studentId
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("student_id", studentId);
+
+        Student student = iStudentService.getOne(studentQueryWrapper);
+        if (student == null) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
         }
-        return RespBean.success(moduleTimeList);
+        // Get the programId for student
+        String programmeId = student.getProgrammeId();
+
+        // Query the list of modules corresponding to programId
+        List<Module> moduleTimeList = iModuleService.list(new QueryWrapper<Module>()
+                .select("module_name", "date","module_id")
+                .eq("programme_id", programmeId));
+
+        // Create a list to store the returned data
+        List<Map<String, Object>> responseData = new ArrayList<>();
+
+        // Convert each module object to a Map containing a duration field and add it to the list of returned data
+        for (Module module : moduleTimeList) {
+            Map<String, Object> moduleData = new HashMap<>();
+            moduleData.put("moduleName", module.getModuleName());
+            moduleData.put("date", module.getDate());
+            moduleData.put("moduleId", module.getModuleId());
+            if (module.getModuleId().equals("FYP00054")){
+                moduleData.put("duration", 2);}
+            else {moduleData.put("duration", 1);}
+            responseData.add(moduleData);
+        }
+
+        return RespBean.success(responseData);
     }
+
 
 
     /**
@@ -464,6 +542,44 @@ public class StudentController {
         return RespBean.success(marks);
     }
 
+    @GetMapping("/courseworkDes")
+    public RespBean courseworkDes(@RequestParam String studentId) {
+        // Verify the studentId from the front-end
+        if (studentId == null || studentId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+
+        // Query the corresponding student record according to studentId
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("student_id", studentId);
+        Student student = iStudentService.getOne(studentQueryWrapper);
+        if (student == null) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+
+        String programmeId = student.getProgrammeId();
+
+        // Query the list of modules corresponding to the programmeId
+        List<Module> moduleList = iModuleService.list(new QueryWrapper<Module>().eq("programme_id", programmeId));
+        if (moduleList.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find modules by programmeId");
+        }
+
+        List<Coursework> courseworkDesList = new ArrayList<>();
+
+        // Iterate over each module to query coursework records
+        for (Module module : moduleList) {
+            String moduleId = module.getModuleId();
+
+            // Query the list of coursework corresponding to the moduleId
+            List<Coursework> CourseworkList = iCourseworkService.list(new QueryWrapper<Coursework>()
+                    .select("coursework_description")
+                    .eq("module_id", moduleId));
+
+            courseworkDesList.addAll(CourseworkList);
+        }
+        return RespBean.success(courseworkDesList);
+    }
     /**
      * Authorization: Student
      * @Author: Xuezhu Chen
@@ -479,14 +595,20 @@ public class StudentController {
      * @throws IOException If an I/O exception occurs during file processing.
      */
     @PostMapping("/uploadCoursework")
-    public RespBean uploadCoursework(@RequestParam MultipartFile file) throws IOException {
+    public RespBean uploadCoursework(@RequestParam MultipartFile file,@RequestParam String studentId,@RequestParam String moduleId) {
         if (file.isEmpty()) {
             return RespBean.error(RespBeanEnum.ERROR, "Uploaded file is empty");
         }
-        iCourseworkService.getUploadCoursework(file);
+        CourseworkStudent courseworkStudent = new CourseworkStudent();
+        String uuid = UUID.randomUUID().toString();
+        courseworkStudent.setCourseworkId(uuid);
+        courseworkStudent.setStudentId(studentId);
+        courseworkStudent.setModuleId(moduleId);
+        courseworkStudent.setIfSubmitted(true);
+        courseworkStudent.setIfExtended(true);
+        iCourseworkStudentService.save(courseworkStudent);
         return RespBean.success();
     }
-
     /**
      * Authorization: Student
      * @Author: Xuezhu Chen
@@ -654,7 +776,7 @@ public class StudentController {
         String tutorId = studentTutor.getTutorId();
 
         List<Staff> tutorInfo = iStaffService.list(new QueryWrapper<Staff>()
-                .select("first_name", "surname", "email", "background")
+                .select("staff_id","first_name", "surname", "email", "background")
                 .eq("staff_id", tutorId));
 
         if (tutorInfo == null) {
@@ -731,4 +853,250 @@ public class StudentController {
         // Return paging results
         return RespBean.success(studyRecordPage);
     }
+
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Submits an email address for processing.
+     * This method checks the format of the submitted email address. If the email address is null or does not match
+     * the required format, an error response is returned indicating an invalid email format. Otherwise, a success
+     * response is returned.
+     *
+     * @param email The email address to be submitted for processing.
+     * @return {@code RespBean} object containing the operation's result. If successful, the {@code RespBean} will
+     *         indicate successful submission. If the email address format is invalid, an error {@code RespBean} is returned.
+     */
+    @PostMapping("/submitEmail")
+    public RespBean submitEmail(@RequestParam String email){
+        // Check the mailbox format
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")){
+            return RespBean.error(RespBeanEnum.ERROR,"Invalid email format");
+        }
+        return RespBean.success();
+    }
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Uploads text content for processing.
+     * This method checks if the submitted text content is empty. If the text content is null or empty, an error
+     * response is returned indicating that some text should be provided for upload. Otherwise, the text content is
+     * saved to a file with a default name ("uploadedText.txt"). Upon successful upload, a success response is returned.
+     *
+     * @param request The {@code Text} object containing the text content to be uploaded.
+     * @return {@code RespBean} object containing the operation's result. If successful, the {@code RespBean} will
+     *         indicate successful upload. If the submitted text is empty, an error {@code RespBean} is returned.
+     */
+    @PostMapping("/uploadAbsence")
+    public RespBean uploadAbsence(@RequestBody Absence request,@RequestParam String studentId){
+
+        String reason = request.getReason();
+        String startTime = request.getStartTime();
+        String endTime = request.getEndTime();
+
+        if (reason == null || startTime == null || endTime == null) {
+            return RespBean.error(RespBeanEnum.ERROR, "please upload absence time and reason");
+        }
+        // Create a new Absence object to store the text
+        Absence absence = new Absence();
+        absence.setReason(reason);
+        absence.setStudentId(studentId); // Set the studentId
+        absence.setStartTime(startTime);
+        absence.setEndTime(endTime);
+
+        iAbsenceService.save(absence);
+
+        return RespBean.success("Text uploaded to Absence table successfully.");
+    }
+
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Retrieves the type of a student based on the provided student ID.
+     * This method fetches the student type from the database based on the given student ID. It first verifies
+     * the validity of the student ID provided from the front-end. If the student ID is null or empty, it returns
+     * an error response indicating that the student ID cannot be empty. Otherwise, it queries the database to
+     * find the student with the provided ID and retrieves their student type. Upon successful retrieval, a success
+     * response containing the student type is returned.
+     *
+     * @param studentId The unique identifier of the student.
+     * @return A {@code RespBean} object containing the student type if the operation is successful,
+     *         or an error response if the student ID is not found or invalid.
+     */
+    @GetMapping("/studentType")
+    public RespBean studentType(@RequestParam String studentId) {
+        // Verify the studentId from the front-end
+        if (studentId == null || studentId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("student_id", studentId);
+
+        Student student = iStudentService.getOne(studentQueryWrapper);
+        int studentType = student.getStudentType();
+
+        return RespBean.success(studentType);
+    }
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Retrieves the absence record for a student based on the provided student ID.
+     * This method fetches the absence record from the database based on the given student ID. It first verifies
+     * the validity of the student ID provided from the front-end. If the student ID is null or empty, it returns
+     * an error response indicating that the student ID cannot be empty. Otherwise, it queries the database to
+     * find the absence records associated with the provided student ID. Upon successful retrieval, a success
+     * response containing the absence record is returned.
+     *
+     * @param studentId The unique identifier of the student.
+     * @return A {@code RespBean} object containing the absence record if the operation is successful,
+     *         or an error response if the student ID is not found or invalid.
+     */
+    @GetMapping("/absenceRecord")
+    public RespBean absenceRecord(@RequestParam String studentId){
+        // Verify the studentId from the front-end
+        if (studentId == null || studentId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+
+        // Get the student's leave record
+        List<Absence> absenceRecord = iAbsenceService.list(new QueryWrapper<Absence>()
+                .select("absence_id","start_time","end_time", "reason", "status","staff_id")
+                .eq("student_id", studentId));
+
+        // If there is no leave record, the corresponding error message is returned
+        if (absenceRecord.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find absence record by studentId");
+        }
+
+        // Update the absenceId and staffId fields for each leave record.
+        for (Absence absence : absenceRecord) {
+            String uuid = UUID.randomUUID().toString();
+            absence.setAbsenceId(uuid);
+            StudentTutor findTutorByStudent = iStudentTutorService.getById(studentId);
+            String tutorId = findTutorByStudent.getTutorId();
+            absence.setStaffId(tutorId);
+            absence.setStatus(0);
+            iAbsenceService.updateById(absence);
+        }
+
+        // Return to the list of leave records
+        return RespBean.success(absenceRecord);
+    }
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Updates the programme choice for a student.
+     * This method allows a student to choose their programme by updating the programme ID associated with their record.
+     * It first verifies the validity of the student ID and programme ID provided from the front-end. If either of them
+     * is null or empty, it returns an error response indicating that the corresponding ID cannot be empty. Then, it
+     * queries the database to find the student record with the provided student ID. If the student record is found,
+     * it updates the programme ID field with the provided programme ID and saves the updated student record. Upon
+     * successful update, a success response is returned. If the update fails, an error response is returned.
+     *
+     * @param studentId The unique identifier of the student.
+     * @param programmeId The unique identifier of the programme chosen by the student.
+     * @return A {@code RespBean} object indicating the result of the update operation. If successful, a success response
+     *         is returned. If the update fails or the student ID cannot be found, an error response is returned.
+     */
+    @PutMapping("/choseProgramme")
+    public RespBean choseProgramme(@RequestParam String studentId, @RequestParam String programmeId) {
+        // Verify the studentId from the front-end
+        if (studentId == null || studentId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+        // Verify the programmeId from the front-end
+        if (programmeId == null || programmeId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Programme ID cannot be empty");
+        }
+        // Queries the student record with the given studentId.
+        Student student = iStudentService.getById(studentId);
+        if (student == null) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+        // Update programmeId field
+        student.setProgrammeId(programmeId);
+        // Saving updated student records
+        boolean updated = iStudentService.updateById(student);
+        if (updated) {
+            return RespBean.success();
+        } else {
+            return RespBean.error(RespBeanEnum.ERROR, "Failed to update student programme");
+        }
+    }
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Updates the programme status for a student.
+     * This method handles the update of the programme status for a student identified by the provided student ID.
+     * It verifies the student ID from the front-end and queries the student record with the given ID.
+     * If the student is found, it updates the programme status field with the provided value.
+     * Finally, it saves the updated student record and returns a success response if the update is successful,
+     * otherwise, it returns an error response.
+     *
+     * @param studentId The unique identifier of the student.
+     * @param programmeStatus The new programme status to be updated.
+     * @return A {@code RespBean} object indicating the result of the update operation.
+     */
+    @PutMapping("/updateProgrammeStatus")
+    public RespBean updateProgrammeStatus(@RequestParam String studentId, @RequestParam int programmeStatus) {
+        // Verify the studentId from the front-end
+        if (studentId == null || studentId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+
+        // Queries the student record with the given studentId.
+        Student student = iStudentService.getById(studentId);
+        if (student == null) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");
+        }
+        // Update programmeId field
+        student.setProgrammeStatus(programmeStatus);
+        // Saving updated student records
+        boolean updated = iStudentService.updateById(student);
+        if (updated) {
+            return RespBean.success();
+        } else {
+            return RespBean.error(RespBeanEnum.ERROR, "Failed to update programme status");
+        }
+    }
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Submits the exam for a student.
+     * This method handles the submission of the exam for a student identified by the provided student ID.
+     * It verifies the student ID from the front-end and updates the exam status for the student.
+     * If the student is found and the exam status is updated successfully, it returns a success response.
+     * Otherwise, it returns an error response.
+     *
+     * @param studentId The unique identifier of the student.
+     * @return A {@code RespBean} object indicating the result of the submission operation.
+     */
+    @PutMapping("/submitExam")
+    public RespBean submitExam(@RequestParam String studentId,@RequestParam String moduleId) {
+        // Verify the studentId from the front-end
+        if (studentId == null || studentId.isEmpty()) {
+            return RespBean.error(RespBeanEnum.ERROR, "Cannot find student by studentId");}
+        // Update Exam Status
+        ExamStudent examStudent = new ExamStudent();
+        examStudent.setIfAttended(true);
+        examStudent.setStudentId(studentId);
+        examStudent.setModuleId(moduleId);
+        String uuid = UUID.randomUUID().toString();
+        examStudent.setExamId(uuid);
+        // Set the current date as exam date
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+        String formattedDate = currentDate.format(formatter);
+        examStudent.setExamDate(formattedDate);
+        iExamStudentService.save(examStudent);
+        return RespBean.success("Submission Success");
+
+    }
+
 }

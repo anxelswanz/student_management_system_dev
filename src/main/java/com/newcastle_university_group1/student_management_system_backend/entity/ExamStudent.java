@@ -1,5 +1,6 @@
 package com.newcastle_university_group1.student_management_system_backend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 
@@ -12,10 +13,22 @@ import com.baomidou.mybatisplus.annotation.TableId;
 public class ExamStudent {
     @TableId
     private String examId;
+    @TableField(value = "student_id")
     private String studentId;
     private double mark;
     private String examDate;
     private boolean ifAttended;
+
+    private String moduleId;
+
+
+    public String getModuleId() {
+        return moduleId;
+    }
+
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
+    }
 
     public String getExamId() {
         return examId;
@@ -65,6 +78,7 @@ public class ExamStudent {
                 ", mark=" + mark +
                 ", examDate='" + examDate + '\'' +
                 ", ifAttended=" + ifAttended +
+                ", moduleId='" + moduleId + '\'' +
                 '}';
     }
 }

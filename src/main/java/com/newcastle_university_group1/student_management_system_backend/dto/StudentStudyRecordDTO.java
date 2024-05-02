@@ -6,8 +6,8 @@ import lombok.Data;
 public class StudentStudyRecordDTO {
     private String moduleId;
     private String moduleName;
-    private String startTime;
     private double courseworkMark;
     private double examMark;
+    private double totalMark;
 
 }

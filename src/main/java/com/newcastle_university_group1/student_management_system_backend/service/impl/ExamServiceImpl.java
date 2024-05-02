@@ -22,6 +22,16 @@ import java.util.List;
 public class ExamServiceImpl extends ServiceImpl<ExamMapper, Exam> implements IExamService {
     @Autowired
     private ExamMapper examMapper;
+
+    /**
+     * Authorization: Student
+     * @author Xuezhu Chen
+     *
+     * This method retrieves information about module exams for a student from the database using the provided student ID.
+     *
+     * @param studentId The unique identifier of the student.
+     * @return A list of {@code ModuleExamInfoDTO} objects containing information about module exams for the student.
+     */
     @Override
     public List<ModuleExamInfoDTO> getModuleExamInfo(String studentId) {
         return examMapper.getModuleExamInfo(studentId);

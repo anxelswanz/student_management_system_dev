@@ -14,5 +14,14 @@ import java.util.List;
  * @ProjectName Dyson Student Management System
  **/
 public interface IExamService extends IService<Exam> {
+    /**
+     * Authorization: Student
+     * @author Xuezhu Chen
+     *
+     * This method retrieves module exam information for a student from the database using the provided student ID.
+     *
+     * @param studentId The unique identifier of the student.
+     * @return A list of {@code ModuleExamInfoDTO} objects containing module exam information for the student.
+     */
     List<ModuleExamInfoDTO> getModuleExamInfo(String studentId);
 }

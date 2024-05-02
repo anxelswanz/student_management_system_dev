@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.newcastle_university_group1.student_management_system_backend.dto.StudentStudyRecordDTO;
 import com.newcastle_university_group1.student_management_system_backend.entity.Module;
 
-import java.util.List;
+
 
 /**
  * @author Ronghui Zhong
@@ -16,8 +16,19 @@ import java.util.List;
  * @ProjectName Dyson Student Management System
  **/
 public interface IModuleService extends IService<Module> {
-    List<Module> getModuleTime(String studentId);
 
 
+    /**
+     * Authorization: Student
+     * @author Xuezhu Chen
+     *
+     * This method retrieves the study record for a student with pagination from the database using the provided student ID
+     * and pagination information. It returns an {@code IPage<StudentStudyRecordDTO>} object containing the study record
+     * for the student with pagination.
+     *
+     * @param studentId The unique identifier of the student.
+     * @param page The pagination information including current page and page size.
+     * @return An {@code IPage<StudentStudyRecordDTO>} object containing the study record for the student with pagination.
+     */
     IPage<StudentStudyRecordDTO> getStudyRecordWithPagination(String studentId, Page<StudentStudyRecordDTO> page);
 }

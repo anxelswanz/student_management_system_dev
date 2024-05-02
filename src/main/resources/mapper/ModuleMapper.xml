@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.ModuleMapper">
+    <select id="selectStudentStudyRecordDTO" parameterType="java.lang.String" resultType="com.newcastle_university_group1.student_management_system_backend.dto.StudentStudyRecordDTO">
+        SELECT
+            m2.module_name AS moduleName,
+            cs.module_id AS moduleId,
+            cs.mark AS courseworkMark,
+            es.mark AS examMark,
+            (cs.mark * 0.4 + es.mark * 0.6) AS totalMark
+        FROM
+            student s
+                JOIN
+            programme p ON s.programme_id = p.programme_id
+                JOIN
+            module m1 ON p.programme_id = m1.programme_id
+                JOIN
+            coursework_student cs ON s.student_id = cs.student_id
+                JOIN
+            exam_student es ON s.student_id = es.student_id
+                JOIN
+            module m2 ON cs.module_id = m2.module_id
+        WHERE
+            s.student_id = #{studentId}
+            LIMIT
+            #{page.current}, #{page.size}
+
+
+
+    </select>
+</mapper>

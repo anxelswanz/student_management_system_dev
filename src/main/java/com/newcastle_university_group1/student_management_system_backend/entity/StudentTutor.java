@@ -1,6 +1,10 @@
 package com.newcastle_university_group1.student_management_system_backend.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Ronghui Zhong
@@ -8,7 +12,10 @@ package com.newcastle_university_group1.student_management_system_backend.entity
  * @date 2024/4/29 18:16
  * @ProjectName Dyson Student Management System
  **/
+@Data
 public class StudentTutor {
+
+    @TableId("student_id")
     private String studentId;
     private String tutorId;
 

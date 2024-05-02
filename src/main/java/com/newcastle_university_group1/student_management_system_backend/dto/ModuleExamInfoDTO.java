@@ -11,4 +11,5 @@ public class ModuleExamInfoDTO {
     private String examStartTime;
     private String examEndTime;
     private int examDuration;
+    private String examDes;
 }
