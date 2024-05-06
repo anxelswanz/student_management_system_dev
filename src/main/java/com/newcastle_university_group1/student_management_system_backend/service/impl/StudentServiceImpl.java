@@ -3,8 +3,10 @@ package com.newcastle_university_group1.student_management_system_backend.servic
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.newcastle_university_group1.student_management_system_backend.entity.Student;
+import com.newcastle_university_group1.student_management_system_backend.entity.StudentTutor;
 import com.newcastle_university_group1.student_management_system_backend.mapper.StudentMapper;
 import com.newcastle_university_group1.student_management_system_backend.service.IStudentService;
+
 import org.springframework.stereotype.Service;
 
 /**

@@ -40,12 +40,7 @@ public class ShiroConfig {
         map.put("/user/login","anon");
         map.put("/user/registerStudent","anon");
         map.put("/user/registerEmp","anon");
-        // map.put("/**","authc");
-        // map.put("/**","user");
         map.put("/user/logout", "logout");
-//        map.put("/user/userLoginRm","authc");
-//        map.put("/manage", "perms[manage]");
-//        map.put("/administrator","roles[administrator]");
         factoryBean.setFilterChainDefinitionMap(map);
 
         return factoryBean;

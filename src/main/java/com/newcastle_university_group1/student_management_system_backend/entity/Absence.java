@@ -6,8 +6,10 @@ import java.io.Serializable;
 
 /**
  * @author Ronghui Zhong
- * @since 2024-04-29
- */
+ * @description: Absence Entity Class
+ * @date 2024/4/28 14:11
+ * @ProjectName Dyson Student Management System
+ **/
 public class Absence implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,10 +26,6 @@ public class Absence implements Serializable {
     @TableId("student_id")
     private String studentId;
 
-    /**
-     * Module_Id
-     */
-    private String moduleId;
 
     /**
      * 0: not decided; 1: approved; 2: not approved.
@@ -76,13 +74,7 @@ public class Absence implements Serializable {
     public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
-    public String getModuleId() {
-        return moduleId;
-    }
 
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
-    }
     public Integer getStatus() {
         return status;
     }
@@ -117,7 +109,6 @@ public class Absence implements Serializable {
         return "Absence{" +
                 "absenceId='" + absenceId + '\'' +
                 ", studentId='" + studentId + '\'' +
-                ", moduleId='" + moduleId + '\'' +
                 ", status=" + status +
                 ", reason='" + reason + '\'' +
                 ", startTime='" + startTime + '\'' +

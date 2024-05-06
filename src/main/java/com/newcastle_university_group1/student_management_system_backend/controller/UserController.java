@@ -13,16 +13,12 @@ import com.newcastle_university_group1.student_management_system_backend.vo.Resp
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBeanEnum;
 import com.newcastle_university_group1.student_management_system_backend.vo.TagsVo;
 import com.newcastle_university_group1.student_management_system_backend.vo.UserVo;
-import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpSession;
 import java.time.Year;
 import java.util.List;
 

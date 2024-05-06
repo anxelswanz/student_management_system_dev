@@ -1,16 +1,31 @@
 package com.newcastle_university_group1.student_management_system_backend.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 /**
- * @author Ronghui Zhong
- * @description: Timetable Entity Class
- * @date 2024/4/29 20:00
- * @ProjectName Dyson Student Management System
- **/
+ * @author Ronghui Zhong, Jingwei Luo
+ * @since 2024-04-29
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Timetable implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * id
+     */
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
     /**
      * Module Name
@@ -42,58 +57,4 @@ public class Timetable implements Serializable {
      */
     private String year;
 
-    public String getModuleName() {
-        return moduleName;
-    }
-
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
-    }
-    public String getModuleId() {
-        return moduleId;
-    }
-
-    public void setModuleId(String moduleId) {
-        this.moduleId = moduleId;
-    }
-    public String getClassLocation() {
-        return classLocation;
-    }
-
-    public void setClassLocation(String classLocation) {
-        this.classLocation = classLocation;
-    }
-    public String getProgrammeId() {
-        return programmeId;
-    }
-
-    public void setProgrammeId(String programmeId) {
-        this.programmeId = programmeId;
-    }
-    public String getModuleTime() {
-        return moduleTime;
-    }
-
-    public void setModuleTime(String moduleTime) {
-        this.moduleTime = moduleTime;
-    }
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "Timetable{" +
-            "moduleName=" + moduleName +
-            ", moduleId=" + moduleId +
-            ", classLocation=" + classLocation +
-            ", programmeId=" + programmeId +
-            ", moduleTime=" + moduleTime +
-            ", year=" + year +
-        "}";
-    }
 }

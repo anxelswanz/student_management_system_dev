@@ -38,30 +38,8 @@ public class MyRealm extends AuthorizingRealm {
     @Autowired
     private StaffMapper staffMapper;
 
-    /**
-     *  Authorization
-     * @param principalCollection
-     * @return
-     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-//        System.out.println("自定义授权方法");
-//        //1. 创建对象, 封装当前登录用户信息, 授权信息
-//        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-//        //2. 存储角色
-//        //info.addRole("admin");
-//        //拿取身份信息
-//        String principle = principalCollection.getPrimaryPrincipal().toString();
-//        // 查询数据库
-//        List<String> roles = userService.getUserRoleInfo(principle);
-//        System.out.println("当前用户角色信息 =>" + roles);
-//        //获取用户权限信息
-//        List<String> userPermissionInfo = userService.getUserPermissionInfoMapper(roles);
-//        System.out.println("当前用户权限信息信息 =>" + userPermissionInfo);
-//        info.addStringPermissions(userPermissionInfo);
-//        info.addRoles(roles);
-//        //3. 返回信息
-//        return info;
         return null;
     }
 

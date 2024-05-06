@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
  * @ProjectName Dyson Student Management System
  **/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentTutor {
 
     @TableId("student_id")

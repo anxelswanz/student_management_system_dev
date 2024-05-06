@@ -36,10 +36,6 @@ public class Staff implements Serializable {
      */
     private Integer staffType;
 
-    /**
-     * Programme ID
-     */
-    private String programmeId;
 
     /**
      *  Password
@@ -102,13 +98,7 @@ public class Staff implements Serializable {
     public void setStaffType(Integer staffType) {
         this.staffType = staffType;
     }
-    public String getProgrammeId() {
-        return programmeId;
-    }
 
-    public void setProgrammeId(String programmeId) {
-        this.programmeId = programmeId;
-    }
 
     public String getPassword() {
         return password;
@@ -141,7 +131,6 @@ public class Staff implements Serializable {
                 ", surname='" + surname + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", staffType=" + staffType +
-                ", programmeId='" + programmeId + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", background='" + background + '\'' +
