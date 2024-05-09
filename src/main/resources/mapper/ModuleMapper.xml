@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="mapper.ModuleMapper">
+    <!--
+        @author Xuezhu Chen
+        SQL query to select study records for a specific student.
+        It retrieves details such as module name, module ID, coursework mark, exam mark, and total mark.
+        Parameters:
+            - studentId: The ID of the student for whom study records are requested.
+            - page.current: Current page number for pagination.
+            - page.size: Number of records per page for pagination.
+        Result:
+            - StudentStudyRecordDTO: DTO containing study records for the student.
+    -->
     <select id="selectStudentStudyRecordDTO" parameterType="java.lang.String" resultType="com.newcastle_university_group1.student_management_system_backend.dto.StudentStudyRecordDTO">
         SELECT
             m2.module_name AS moduleName,
@@ -24,8 +35,5 @@
             s.student_id = #{studentId}
             LIMIT
             #{page.current}, #{page.size}
-
-
-
     </select>
 </mapper>

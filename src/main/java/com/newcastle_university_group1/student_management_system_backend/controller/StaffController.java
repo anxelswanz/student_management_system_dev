@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.newcastle_university_group1.student_management_system_backend.dto.SubmittedWorkDto;
+import com.newcastle_university_group1.student_management_system_backend.dto.SubmittedWorkDTO;
 import com.newcastle_university_group1.student_management_system_backend.dto.TimetableDTO;
 import com.newcastle_university_group1.student_management_system_backend.dto.TutorStudentDTO;
 import com.newcastle_university_group1.student_management_system_backend.entity.*;
@@ -530,14 +530,14 @@ public class StaffController {
         moduleQueryWrapper.eq("staff_id", staffId);
         List<Module> modules = moduleMapper.selectList(moduleQueryWrapper);
 
-        List<SubmittedWorkDto> list = new ArrayList<>();
+        List<SubmittedWorkDTO> list = new ArrayList<>();
         for (Module module : modules) {
             QueryWrapper<CourseworkStudent> courseworkStudentQueryWrapper = new QueryWrapper<>();
             courseworkStudentQueryWrapper.eq("module_id", module.getModuleId());
             List<CourseworkStudent> courseworkStudents = courseworkStudentMapper.selectList(courseworkStudentQueryWrapper);
             for (CourseworkStudent courseworkStudent : courseworkStudents) {
                 if (courseworkStudent.getMark() == -1) {
-                    SubmittedWorkDto submittedWorkDto = new SubmittedWorkDto();
+                    SubmittedWorkDTO submittedWorkDto = new SubmittedWorkDTO();
                     submittedWorkDto.setStudentId(courseworkStudent.getStudentId());
                     submittedWorkDto.setModuleId(module.getModuleId());
                     submittedWorkDto.setType("Coursework");
@@ -555,7 +555,7 @@ public class StaffController {
             List<ExamStudent> examStudents = examStudentMapper.selectList(examStudentQueryWrapper);
             for (ExamStudent examStudent : examStudents) {
                 if (examStudent.getMark() == -1) {
-                    SubmittedWorkDto submittedWorkDto = new SubmittedWorkDto();
+                    SubmittedWorkDTO submittedWorkDto = new SubmittedWorkDTO();
                     submittedWorkDto.setModuleId(moduleId);
                     submittedWorkDto.setType("Exam");
                     submittedWorkDto.setStudentId(examStudent.getStudentId());

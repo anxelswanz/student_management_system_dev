@@ -556,6 +556,16 @@ public class StudentController {
         return RespBean.success(marks);
     }
 
+    /**
+     * Authorization: Student
+     * @Author: Xuezhu Chen
+     *
+     * Retrieves the descriptions of coursework for a given student ID.
+     * This method retrieves the coursework descriptions associated with the student identified by the provided student ID.
+     * It first verifies the validity of the student ID. If the student ID is null or empty, an error response is returned
+     * indicating the inability to find a student with the provided ID. It then queries the database to find the corresponding
+     * student record. If no student is found with the provided ID, an error response is returned.
+     **/
     @GetMapping("/courseworkDes")
     public RespBean courseworkDes(@RequestParam String studentId) {
         // Verify the studentId from the front-end
@@ -1113,6 +1123,14 @@ public class StudentController {
         return RespBean.success("Submission Success");
     }
 
+    /**
+     * @Author: Ronghui Zhong
+     *
+     * Retrieves the academic history for a given student based on the student ID.
+     * This method fetches the student details and their module histories from the database.
+     * @param studentId
+     * @return
+     */
     @GetMapping("/getMyAcademicHistory")
     public RespBean getMyAcademicHistory(@RequestParam String studentId){
         if (studentId == null)

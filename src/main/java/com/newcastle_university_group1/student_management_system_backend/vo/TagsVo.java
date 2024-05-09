@@ -2,8 +2,8 @@ package com.newcastle_university_group1.student_management_system_backend.vo;
 
 /**
  * @author Ronghui Zhong
- * @description:
- * @date 2024/4/29 19:03
+ * @description: Receive Tags from the staff register
+ * @date 2024/4/29 12:18
  * @ProjectName student_management_system_backend
  **/
 public class TagsVo {
