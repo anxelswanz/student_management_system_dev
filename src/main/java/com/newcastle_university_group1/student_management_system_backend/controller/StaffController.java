@@ -11,6 +11,7 @@ import com.newcastle_university_group1.student_management_system_backend.dto.Tut
 import com.newcastle_university_group1.student_management_system_backend.entity.*;
 import com.newcastle_university_group1.student_management_system_backend.mapper.*;
 import com.newcastle_university_group1.student_management_system_backend.service.*;
+import com.newcastle_university_group1.student_management_system_backend.vo.ModuleTimetableVO;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBean;
 import com.newcastle_university_group1.student_management_system_backend.vo.RespBeanEnum;
 import com.newcastle_university_group1.student_management_system_backend.vo.StaffStudentVO;
@@ -22,13 +23,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Luo Jinwei / Jamie Cottrell / Ronghui Zhong
+ * @author Luo Jinwei / Ronghui Zhong / Jamie Cottrell
  * @description:
+ * Key features of the StaffController class include:
+ *
+ * Module and Timetable Management: It provides methods to create, retrieve, update, and delete timetables, as well as to manage academic modules.
+ * This includes fetching modules linked with timetables and those not yet scheduled.
+ * Student Information Access: The class offers detailed views of student records, allowing staff to access information about students' academic progress, coursework, exam results, and module histories.
+ * This functionality is also sensitive to user roles, providing broader access to administrators and restricted views for tutors.
+ * Absence Management: Administrators can review and manage absence requests.
+ * Staff Management: It supports operations related to staff members,
+ * such as retrieving staff details, updating staff information, and managing links between staff and academic programs.
+ * Academic Assessment Tools: It includes features for posting and managing coursework and exams,
+ * viewing submitted student work, and updating grades.
+ * Linking Tutors and Students: Specialized methods are included to manage the relationships between tutors and their assigned students.
+ * Performance Tracking: The system allows for the calculation of final marks based on a combination of coursework and examination scores.
  * @date 2024/4/30 16:24
  * @ProjectName student_management_system_backend
  **/
 @RestController
-@RequestMapping("/staff")
+@RequestMapping("/api/staff")
 public class StaffController {
 
     @Autowired
@@ -73,6 +87,63 @@ public class StaffController {
 
     @Resource
     private TimetableMapper timetableMapper;
+
+    /**
+     * Authorization: Administrator
+     * @Author: Jingwei Luo
+     * Retrieves a paginated list of modules with their associated timetables.
+     * @param pageNum The page number for pagination, the default value is 1.
+     * @param pageSize The number of records per page, the default value is 10.
+     * @return A {@link RespBean} object contains a paginated list of {@link ModuleTimetableVO} objects.
+     * Each {@link ModuleTimetableVO} includes module details with the associated timetables.
+     */
+    @GetMapping("/moduleWithTimetable")
+    public RespBean moduleWithTimetable(@RequestParam(defaultValue = "1") Integer pageNum,
+                                        @RequestParam(defaultValue = "10") Integer pageSize){
+        LambdaQueryWrapper<Module> lambdaQueryWrapper = new LambdaQueryWrapper<Module>();
+        lambdaQueryWrapper.in(Module::getModuleId,moduleMapper.getAllTimeTableModuleId());
+        List<ModuleTimetableVO> rst = new ArrayList<>();
+
+        //To query all the modules that have been scheduled in the timetable
+        Page<Module> page = moduleMapper.selectPage(new Page<>(pageNum,pageSize),lambdaQueryWrapper);
+        if(page!=null){
+            for(Module module:page.getRecords()){
+                ModuleTimetableVO moduleTimetableVO = ModuleTimetableVO
+                        .builder().moduleId(module.getModuleId()).moduleName(module.getModuleName())
+                        .staffId(module.getStaffId()).status(module.getStatus()).type(module.getType())
+                        .programmeId(module.getProgrammeId()).count(module.getCount())
+                        .date(module.getDate()).credits(module.getCredits())
+                        .build();//Copy modules to moduleTimetableVO
+                moduleTimetableVO.setTimetables(timetableMapper.selectList(new LambdaQueryWrapper<Timetable>()
+                        .eq(Timetable::getModuleId,module.getModuleId())));//get the timetable corresponding to the module
+                rst.add(moduleTimetableVO);
+            }
+        }
+        //assemble the pagination object and return it
+        Page<ModuleTimetableVO> voPage = new Page<>();
+        voPage.setRecords(rst);
+        voPage.setSize(page.getSize());
+        voPage.setCurrent(page.getCurrent());
+        voPage.setTotal(page.getTotal());
+        return RespBean.success(voPage);
+    }
+
+    /**
+     * Authorization: Administrator
+     * @Author: Jingwei Luo
+     * Retrieves a paginated list of modules that are currently not included in any timetable.
+     * @param pageNum The page number for pagination, the default value is 1.
+     * @param pageSize The number of records per page, the default value is 10.
+     * @return A {@link RespBean} object containing the paginated list of {@link Module} objects.
+     * Each object is currently not linked to any timetable entries.
+     */
+    @GetMapping("/moduleNotInTimetable")
+    public RespBean moduleNotInTimetable(@RequestParam(defaultValue = "1") Integer pageNum,
+                                         @RequestParam(defaultValue = "10") Integer pageSize){
+        LambdaQueryWrapper<Module> lambdaQueryWrapper = new LambdaQueryWrapper<Module>();
+        lambdaQueryWrapper.in(Module::getModuleId,moduleMapper.getNotInTimeTableModuleId());
+        return RespBean.success(moduleMapper.selectPage(new Page<>(pageNum,pageSize),lambdaQueryWrapper));
+    }
 
 
     /**
@@ -361,7 +432,6 @@ public class StaffController {
      *
      * @param staffId the ID of the staff
      * @return a response bean containing a list of absence requests
-     * @author Ronghui Zhong
      * @date 2024/4/30
      */
     @GetMapping("/getAllAbsenceRequests")
@@ -387,12 +457,12 @@ public class StaffController {
     }
 
     /**
+     * @Author: Ronghui Zhong
      * Updates the status of an absence request.
      *
      * @param absenceId the ID of the absence request
      * @param status the new status of the absence request
      * @return a response bean indicating the success or failure of the operation
-     * @author Ronghui Zhong
      * @date 2024/4/30
      */
     @GetMapping("/updateAbsenceRequest")
@@ -415,7 +485,6 @@ public class StaffController {
      *
      * @param coursework the coursework to be posted
      * @return a response bean indicating the success or failure of the operation
-     * @author Ronghui Zhong
      * @date 2024/4/30
      */
     @PostMapping("/postCoursework")
@@ -433,7 +502,6 @@ public class StaffController {
      *
      * @param exam the exam to be posted
      * @return a response bean indicating the success or failure of the operation
-     * @author Ronghui Zhong
      * @date 2024/4/30
      */
     @PostMapping("/postExam")
@@ -451,7 +519,6 @@ public class StaffController {
      *
      * @param staffId the ID of the staff member
      * @return a response bean containing a list of submitted work DTOs
-     * @author Ronghui Zhong
      * @date 2024/4/30
      */
     @GetMapping("/getAllWork")
@@ -510,7 +577,6 @@ public class StaffController {
      * @param type the type of the work (Coursework or Exam)
      * @param mark the new mark for the work
      * @return a response bean indicating the success or failure of the operation
-     * @author Ronghui Zhong
      * @date 2024/4/30
      */
     @GetMapping("/updateWork")
@@ -551,7 +617,6 @@ public class StaffController {
      * @param moduleId the ID of the module
      * @param studentId the ID of the student
      * @return a response bean containing the calculated final mark and module history information
-     * @author Ronghui Zhong
      * @date 2024/4/30
      */
     @GetMapping("/calculateFinalMark")

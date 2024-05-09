@@ -243,5 +243,4 @@ public class UserController {
     public RespBean index(){
         return RespBean.error(RespBeanEnum.NOT_AUTHENTICATED);
     }
-
 }

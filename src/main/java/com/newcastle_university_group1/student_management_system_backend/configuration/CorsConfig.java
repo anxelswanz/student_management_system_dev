@@ -10,7 +10,7 @@ import org.springframework.web.filter.CorsFilter;
  * @Description
  * Configuration class for setting up CORS (Cross-Origin Resource Sharing) in the application.
  * This class defines a bean to allow cross-origin requests from any source.
- * @Date 2023/5/28
+ * @Date 2023/5/28 16:40
  * @ProjectName Dyson Student Management System
  */
 

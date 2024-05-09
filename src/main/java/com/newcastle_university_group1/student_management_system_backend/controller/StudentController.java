@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.newcastle_university_group1.student_management_system_backend.dto.ModuleExamInfoDTO;
 import com.newcastle_university_group1.student_management_system_backend.dto.StudentStudyRecordDTO;
 import com.newcastle_university_group1.student_management_system_backend.entity.*;
+import com.newcastle_university_group1.student_management_system_backend.mapper.ModuleHistoryMapper;
 import com.newcastle_university_group1.student_management_system_backend.mapper.ModuleMapper;
 import com.newcastle_university_group1.student_management_system_backend.mapper.StudentMapper;
 import com.newcastle_university_group1.student_management_system_backend.service.*;
@@ -24,6 +25,17 @@ import java.util.*;
 /**
  * @author Ronghui Zhong & Xuezhu Chen
  * @description:
+ *
+ * Module Information Retrieval: Students can fetch information related to the modules they are enrolled in,
+ * such as module IDs, names, credits, and detailed descriptions.
+ * Programme Details Access: The controller allows students to retrieve detailed information about their academic programmes,
+ * including programme names and descriptions.
+ * Academic Record Management: It supports operations to view and manage academic histories,
+ * such as viewing module exams and coursework details, submitting coursework, and checking grades.
+ * Exam Management: Students can get information about their exams, submit exams, and view their exam marks.
+ * Absence Management: This functionality allows students to submit absence requests and view their absence records.
+ * Personal and Academic Support: The controller provides access to personal tutor information.
+ * Email and Contact Management: Students can get  email addresses of staff members related to their modules.
  * @date 2024/4/5 2:58
  * @ProjectName student_management_system_backend
  **/
@@ -68,6 +80,8 @@ public class StudentController {
     @Autowired
     private IAbsenceService iAbsenceService;
 
+    @Autowired
+    private ModuleHistoryMapper moduleHistoryMapper;
     /**
      * Authorization: Student
      * @Author: Ronghui Zhong
@@ -900,6 +914,8 @@ public class StudentController {
         }
         // Create a new Absence object to store the text
         Absence absence = new Absence();
+        String absenceId = UUID.randomUUID().toString();
+        absence.setAbsenceId(absenceId);
         absence.setReason(reason);
         absence.setStudentId(studentId); // Set the studentId
         absence.setStartTime(startTime);
@@ -974,7 +990,6 @@ public class StudentController {
         // Update the absenceId and staffId fields for each leave record.
         for (Absence absence : absenceRecord) {
             String uuid = UUID.randomUUID().toString();
-            absence.setAbsenceId(uuid);
             StudentTutor findTutorByStudent = iStudentTutorService.getById(studentId);
             String tutorId = findTutorByStudent.getTutorId();
             absence.setStaffId(tutorId);
@@ -1096,7 +1111,30 @@ public class StudentController {
         examStudent.setExamDate(formattedDate);
         iExamStudentService.save(examStudent);
         return RespBean.success("Submission Success");
-
     }
 
+    @GetMapping("/getMyAcademicHistory")
+    public RespBean getMyAcademicHistory(@RequestParam String studentId){
+        if (studentId == null)
+            return RespBean.error(RespBeanEnum.ERROR);
+        QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<>();
+        studentQueryWrapper.eq("student_id",studentId);
+        Student student = studentMapper.selectOne(studentQueryWrapper);
+        if (student == null)
+            return RespBean.error(RespBeanEnum.ERROR);
+        QueryWrapper<Module> moduleQueryWrapper = new QueryWrapper<>();
+        moduleQueryWrapper.eq("programme_id",student.getProgrammeId());
+        List<Module> modules = moduleMapper.selectList(moduleQueryWrapper);
+        List<ModuleHistory> moduleHistories = new ArrayList<>();
+        for (Module module : modules) {
+            QueryWrapper<ModuleHistory> moduleHistoryQueryWrapper = new QueryWrapper<>();
+            moduleHistoryQueryWrapper.eq("module_id", module.getModuleId());
+            moduleHistoryQueryWrapper.eq("student_id",studentId);
+            ModuleHistory moduleHistory = moduleHistoryMapper.selectOne(moduleHistoryQueryWrapper);
+            if (moduleHistory != null) {
+                moduleHistories.add(moduleHistory);
+            }
+        }
+        return RespBean.success(moduleHistories);
+    }
 }

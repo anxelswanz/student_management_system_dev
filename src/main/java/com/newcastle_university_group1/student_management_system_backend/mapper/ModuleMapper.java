@@ -44,5 +44,23 @@ public interface ModuleMapper extends BaseMapper<Module> {
             "LIMIT #{page.current}, #{page.size}")
     IPage<StudentStudyRecordDTO> getStudyRecordWithPagination(String studentId, Page<StudentStudyRecordDTO> page);
 
+    /**
+     * @Author: Jingwei Luo
+     * Retrieves a list of student IDs that are currently included in any timetable.
+     * It is useful for identifying modules that have scheduled times
+     * @return A list of module IDs that are present in the timetable.
+     */
+    @Select("SELECT module_id FROM MODULE WHERE module_id IN " +
+            " ( SELECT  module_id FROM timetable ) ")
+    List<String> getAllTimeTableModuleId();
 
+    /**
+     * @Author: Jingwei Luo
+     * Retrieves a list of module IDs that are not currently included in any timetable.
+     * It can be useful for identifying modules that are currently not be scheduled
+     * @return A list of module IDs that are present in the timetable.
+     */
+    @Select("SELECT module_id FROM MODULE WHERE module_id NOT IN " +
+            " ( SELECT  module_id FROM timetable ) ")
+    List<String> getNotInTimeTableModuleId();
 }
