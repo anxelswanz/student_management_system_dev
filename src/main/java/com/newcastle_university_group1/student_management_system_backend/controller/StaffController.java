@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Luo Jinwei / Ronghui Zhong / Jamie Cottrell
+ * @author Jingwei Luo / Ronghui Zhong / Jamie Cottrell
  * @description:
  * Key features of the StaffController class include:
  *
@@ -90,6 +90,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Retrieves a paginated list of modules with their associated timetables.
      * @param pageNum The page number for pagination, the default value is 1.
@@ -130,6 +131,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Retrieves a paginated list of modules that are currently not included in any timetable.
      * @param pageNum The page number for pagination, the default value is 1.
@@ -148,6 +150,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Builds a timetable in the database using the given data of the {@link TimetableDTO} object,
      * and inerts the timetable into the database.
@@ -171,6 +174,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Updates a timetable in the database using the given data of the {@link TimetableDTO} object,
      * and inerts the updated timetable into the database.
@@ -193,6 +197,7 @@ public class StaffController {
 
     /**
      * Authorization: Staff (the administrator and tutors)
+     *
      * @Author: Jingwei Luo
      * Retrieves a paginated list of students with the information of their modules and module histories
      * (including coursework, exams, grades and academic history) based on filters and the type of the staff.
@@ -272,6 +277,7 @@ public class StaffController {
 
     /**
      * Authorization: Staff (the administrator and tutors)
+     *
      * @Author: Jingwei Luo
      * Retrieves detailed information of a specific student, containing modules and module history information.
      * Searches for the student by the given student ID, and returns a list of modules and module history information
@@ -318,6 +324,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Retrieves a paginated list of all staff.
      * @param pageNum The page number for pagination, the default value is 1.
@@ -334,6 +341,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Retrieves a paginated list of a specific staff with the given staff ID.
      * @param staffId The staff ID which is the unique identifier of the staff.
@@ -347,6 +355,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Updates the information of an existing staff in the database.
      * Takes a {@link Staff} object as input, containing the new information of the staff,
@@ -363,6 +372,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Deletes the staff with the given staff ID from the database.
      * Uses the given staff ID to find the staff to be deleted.
@@ -378,6 +388,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Retrieves a list of programmes associated with a specific staff, identified by the given staff ID.
      * @param staffId The staff ID which is the unique identifier of the staff.
@@ -395,6 +406,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Updates an existing staff-programme link in the database based on the given staff-programme link object.
      * The given {@link StaffProgrammeLink} object contains the staff ID as an identifier of the link
@@ -412,6 +424,7 @@ public class StaffController {
 
     /**
      * Authorization: Administrator
+     *
      * @Author: Jingwei Luo
      * Deletes all staff-programme links associated with the specified staff from the database
      * based on the given staff ID.
@@ -427,6 +440,8 @@ public class StaffController {
 
 
     /**
+     * @Authorization: Teacher and Admin
+     *
      * @Author: Ronghui Zhong
      * Retrieves all absence requests based on staff ID.
      *
@@ -457,6 +472,8 @@ public class StaffController {
     }
 
     /**
+     * @Authorization: Teacher and Admin
+     *
      * @Author: Ronghui Zhong
      * Updates the status of an absence request.
      *
@@ -480,6 +497,8 @@ public class StaffController {
 
 
     /**
+     * @Authorization: Teacher and Admin
+     *
      * @Author: Ronghui Zhong
      * Posts a coursework to the system.
      *
@@ -497,6 +516,8 @@ public class StaffController {
     }
 
     /**
+     * @Authorization: Teacher and Admin
+     *
      * @Author: Ronghui Zhong
      * Posts an exam to the system.
      *
@@ -514,6 +535,8 @@ public class StaffController {
 
 
     /**
+     * @Authorization: Teacher and Admin
+     *
      * @Author: Ronghui Zhong
      * Retrieves all work submitted by students for a staff member.
      *
@@ -570,6 +593,8 @@ public class StaffController {
 
 
     /**
+     * @Authorization: Teacher and Admin
+     *
      * @Author: Ronghui Zhong
      * Updates the mark of a piece of work.
      *
@@ -611,6 +636,8 @@ public class StaffController {
     }
 
     /**
+     * @Authorization: Teacher and Admin
+     *
      * @Author: Ronghui Zhong
      * Calculates the final mark for a student in a module.
      *
@@ -683,6 +710,8 @@ public class StaffController {
     private IStudentTutorService studentTutorService;
 
     /**
+     * @Authorization: Administrator
+     *
      * @Author: Jamie Cottrell
      * Retrieves a list of all staff Ids from the Staff entity.
      * @return a {@link RespBean} object containing the list of staff Ids..
@@ -694,6 +723,8 @@ public class StaffController {
     }
 
     /**
+     * @Authorization: Administrator
+     *
      * @Author: Jamie Cottrell
      * Retrieves the available Student Ids.
      * Assigns the total number of students from the student_tutor table who have student Ids beginning with 'S',
@@ -726,6 +757,8 @@ public class StaffController {
     }
 
     /**
+     * @Authorization: Administrator
+     *
      * @Author: Jamie Cottrell
      * Saves Tutor and Student information using the saveTutorAndStudents method in the studentTutor
      * Service class.
@@ -744,6 +777,8 @@ public class StaffController {
     }
 
     /**
+     * @Authorization: Administrator
+     *
      * @Author: Jamie Cottrell
      * a list of Students with their assigned tutors is assigned to the tutorWithStudents List of Strings.
      * This list is converted into a String array.

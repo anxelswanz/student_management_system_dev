@@ -1124,6 +1124,7 @@ public class StudentController {
     }
 
     /**
+     * @Authroization: Student
      * @Author: Ronghui Zhong
      *
      * Retrieves the academic history for a given student based on the student ID.

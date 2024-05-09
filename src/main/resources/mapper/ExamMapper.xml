@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="mapper.ExamMapper">
+    <!--
+        @author Xuezhu Chen
+        SQL query to select exam information for modules associated with a specific student.
+        It retrieves details such as module ID, module name, exam date, exam site, etc.
+        Parameters:
+            - studentId: The ID of the student for whom exam information is requested.
+        Result:
+            - ModuleExamInfoDTO: DTO containing exam information for modules associated with the student.
+    -->
     <select id="selectModuleExamInfoDTO" parameterType="java.lang.String" resultType="com.newcastle_university_group1.student_management_system_backend.dto.ModuleExamInfoDTO">
         SELECT
             m.module_id AS moduleId,
@@ -19,10 +28,7 @@
             module m ON p.programme_id = m.programme_id
                 JOIN
             exam e ON m.module_id = e.module_id
-
         WHERE
             s.student_id = #{studentId}
-
-
     </select>
 </mapper>
